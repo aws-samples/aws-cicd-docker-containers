@@ -141,35 +141,32 @@ In this step, you create an SSH key and import it into GitHub so we can login in
 
   `ssh-keygen -t rsa -b 4069 -C your_email@company.com`
 
-20.	Accept the file location and enter a passphrase
+2. Accept the file location and type a passphrase.
+3. Ensure `ssh-agent` is enabled by running the following command:
 
-21.	Ensure ssh-agent is enabled:
+  `eval "$(ssh-agent -s)"`
 
-a.	eval "$(ssh-agent -s)"
+4. Add the SSH key to agent:
 
-22.	Add ssh key to agent
+  `ssh-add ~/.ssh/id_rsa`
 
-a.	ssh-add ~/.ssh/id_rsa
+  **Note**: If you already have a key called id_rsa, choose another name. 
 
-Note: If you already have a key called id_rsa, choose another name. 
+5. Copy the contents of the `id_rsa.pub` file to the clipboard.  On OS X you can use the following command:
 
-23.	Copy the contents of the id_rsa.pub file to the clipboard
+  `pbcopy < ~/.ssh/id_rsa.pub`
 
-a.	pbcopy < ~/.ssh/id_rsa.pub
+6. Login to Github.  If you don't have a Github account, follow the instructions posted here, https://help.github.com/articles/signing-up-for-a-new-github-account/. 
 
-24.	Login to Github.  If you don't have a Github account, follow the instructions posted here, https://help.github.com/articles/signing-up-for-a-new-github-account/. 
+  1. In the top right corner of any page, choose your profile picture, then choose settings.
+  2. In the user settings sidebar, choose **SSH and GPG keys**.
+  3. Choose **New SSH key** or **Add SSH key**.
+  4. Type a title for the key.
+  5. Paste your key in the key field.
+  6. Click **Add SSH key**.
+  7. If prompted, confirm your GitHub password.
 
-a.	In the top right corner of any page, click your profile picture, then click settings
-b.	In the user settings sidebar, click SSH and GPG keys
-c.	Click New SSH key or Add SSH key
-d.	Give the key a title
-e.	Paste your key in the key field
-f.	Click Add SSH key
-g.	If prompted, confirm your github password
-
-
- 
-Step 6: Create a Github repo  
+##Step 6: Create a Github repo  
 In this step we'll create a repo to store our dockerfile and all its dependencies.  
 
 25.	Create a repo
