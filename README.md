@@ -206,9 +206,10 @@ In this step you create a repository to store your dockerfile and all its depend
   5. In the search field, type `Jenkins (github plugin)`
   6. Enter the public `FQDN/github-webhook/` of your Jenkins server in the Jenkins URL field prepended by your Jenkins username & password.
 
-  **Note**: If your Jenkins password containers special characters, you will need to encode them using URL escape codes.  
-  Make sure there is a trailing / at the end of the URL.  For example:
-  Example: http://username:password@FQDN/github-webhook/ 
+    **Note**: If your Jenkins password containers special characters, you will need to encode them using URL escape codes.  
+    
+    Make sure there is a trailing / at the end of the URL.  For example:
+    `http://username:password@FQDN/github-webhook/`
 
   7. Click the Update service button
 
