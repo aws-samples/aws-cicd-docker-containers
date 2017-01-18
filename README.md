@@ -180,16 +180,26 @@ In this step you create a repository to store your dockerfile and all its depend
   3. Delete the hidden .git directory
   If you're running OSX, type `rm -fR .git`. Otherwise, type `del /S /F /Q .git`.
   4. Reinitialize the repository and push the contents to your new GitHub repository using SSH by running the following command:
+  
     `git init`
+    
   5. Stage your files:
+    
     `git add .`
+    
     `git commit -m "First commit"`
+    
   6. Set your remote origin.
   If you are using SSH, run the following command: 
+  
     `git remote add origin 'git@github.com:<your_repo>.git'`
+    
   If you are using HTTPS, run the following command: 
+  
     `git remote add origin 'https://github.com/<your_repo>.git'`
+    
   **Note**: If you created the SSH key for GitHub on your machine, you can use either method.  The HTTPS method requires that you to enter your GitHub username and password at the prompts. 
+  
   7. Push your code to GitHub by running the following command: 
     `git push -u origin master`
 
@@ -211,7 +221,7 @@ In this step you create a repository to store your dockerfile and all its depend
     Make sure there is a trailing / at the end of the URL.  For example:
     `http://username:password@FQDN/github-webhook/`
 
-  7. Click the Update service button
+  7. Choose **Update service**.
 
 ##Step 7: Configure Jenkins  
 In this step we will Jenkins Freestyle project to automate the tasks in our pipeline.  
