@@ -77,13 +77,19 @@ Jenkins is a popular server for implementing continuous integration and continuo
 3. Copy the public hostname
 4. SSH into the instance, and then copy the temp password from `/var/lib/jenkins/secrets/initialAdminPassword`.
 
-a.	(OS X) ssh -i <full_path_to_key_file> ec2-user@<public_hostname>
-b.	(Windows) For the Windows instructions see http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html 
-c.	sudo cat /var/lib/jenkins/secrets/initialAdminPassword
-
-10.	Copy the output and logout of the instance
-
-a.	logout
+  1. On OS X, use the following command:
+  
+    `ssh -i <full_path_to_key_file> ec2-user@<public_hostname>`
+    
+    For Windows instructions, see [Connecting to your Linux Instance from Windows Using PuTTY.](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html)
+    
+  2. Run the following command:
+  
+    `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
+    
+  3. Copy the output and logout of the instance by typing the following command:
+  
+    `logout`
 
 Step 3: Create ECR registry  
 ECR is a private Docker container registry that we'll use to store our container images.  For this example, we'll be creating a repository called hello-world in the us-west-2 (Oregon) region.
