@@ -190,22 +190,23 @@ In this step you create a repository to store your dockerfile and all its depend
     `git commit -m "First commit"`
     
   6. Set your remote origin.
-  If you are using SSH, run the following command: 
+  
+    If you are using SSH, run the following command: 
   
     `git remote add origin 'git@github.com:<your_repo>.git'`
     
-  If you are using HTTPS, run the following command: 
+    If you are using HTTPS, run the following command: 
   
     `git remote add origin 'https://github.com/<your_repo>.git'`
     
-  **Note**: If you created the SSH key for GitHub on your machine, you can use either method.  The HTTPS method requires that you to enter your GitHub username and password at the prompts. 
+    **Note**: If you created the SSH key for GitHub on your machine, you can use either method.  The HTTPS method requires that you to enter your GitHub username and password at the prompts. 
   
   7. Push your code to GitHub by running the following command: 
     `git push -u origin master`
 
-  This project includes a file called taskdef.json.  You can view it in the GitHub interface or with a text editor on your local machine.  This file is the JSON representation of your ECS task definition.
+    This project includes a file called taskdef.json.  You can view it in the GitHub interface or with a text editor on your local machine.  This file is the JSON representation of your ECS task definition.
 
-  **Note**: You must supply values for the **family** and **name** keys. These are used used later in the Jenkins execution scripts.  You have to set the value of the **image** key to `%REPOSITORY_URI%:v_%BUILD_NUMBER%`. You will use this mechanism to add the Jenkins build number as a tag to the Docker image. 
+    **Note**: You must supply values for the **family** and **name** keys. These are used used later in the Jenkins execution scripts.  You have to set the value of the **image** key to `%REPOSITORY_URI%:v_%BUILD_NUMBER%`. You will use this mechanism to add the Jenkins build number as a tag to the Docker image. 
 
 3. Enable webhooks on your repo so Jenkins is notified when files are pushed
 
