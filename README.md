@@ -291,7 +291,6 @@ else
   aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}
 fi
 ```
-
     NOTE: Before saving this project, make sure that the variable CLUSTER is set to the name you gave your cluster, the REPOSITORY_NAME is set to the name of your ECR registry, and the REGION is set to the region where you created your ECS cluster. 
 
   19. Click **save**. 
