@@ -61,7 +61,7 @@ To use this guide, you must have the following software components installed:
 
   **Note**: Do not proceed to the next step until the **Stack Status** shows **CREATE_COMPLETE**.  To get the status of the stack type `aws cloudformation describe-stacks --stack-name EcsClusterStack --query 'Stacks[*].[StackId, StackStatus]'` at a command prompt. 
 
-##Step 2: Create Jenkins server
+##Step 2: Create a Jenkins Server
 Jenkins is a popular server for implementing continuous integration and continuous delivery pipelines. In this example, you'll use Jenkins to build a Docker image from a Dockerfile, push that image to the Amazon ECR registry that you created earlier, and create a task definition for your container. Finally, you'll deploy and update a service running on your ECS cluster.
 
 1. Change the current working directory to the root of the cloned repository, and then execute the following command:
@@ -91,7 +91,7 @@ Jenkins is a popular server for implementing continuous integration and continuo
   
     `logout`
 
-##Step 3: Create ECR registry
+##Step 3: Create an ECR Registry
 Amazon ECR is a private Docker container registry that you'll use to store your container images. For this example, we'll create a repository named hello-world in the us-west-2 (Oregon) region.
 
 1. Create a ECR registry by running the following command: 
@@ -103,36 +103,36 @@ Amazon ECR is a private Docker container registry that you'll use to store your 
 
   Because the Docker CLI doesn't support the standard AWS authentication methods, you need to authenticate the Docker client in another way so ECR knows who is trying to push an image.  Using the AWS CLI, you generate an authorization token that you pass into the Docker login command.
 
-a.	If you’re using OS X, type: $(aws ecr get-login)
-b.	If you’re running Windows, type: aws ecr get-login | cmd
+  * If you’re using OS X, type: `$(aws ecr get-login)`
+  * If you’re running Windows, type: `aws ecr get-login | cmd`
 
-Note: This command will not succeed unless you have the Docker client tools installed on your machine and the Docker VM is running.  The output should say Login Succeeded.
- 
-Step 4: Configure Jenkins first run
-14.	Paste the public hostname of the Jenkins server from step 2.7 into a browser
-15.	Paste the password you copied from the /var/lib/jenkins/secrets directory (step 2.9.b) in the password field, then click next 
-16.	Click install suggested plugins
-17.	Create your first admin user
+  **Note**: This command will not succeed unless you have the Docker client tools installed on your machine and the Docker Virtual Machine is running.  The output should say Login Succeeded.
 
-a.	Username: <username>
-b.	Password: <password>
-c.	Confirm password: <password>
-d.	Full name: <full_name>
-e.	Email address: <email_address>
-f.	Click save and finish
-g.	Click start using Jenkins
+##Step 4: Configure Jenkins First Run
+1. Paste the public hostname of the Jenkins server from step 2.3 into a browser.
+2. Paste the password you copied from the `/var/lib/jenkins/secrets` directory from Step 2: Create a Jenkins Server (step 2.4) in the password field, and then choose **Next**.
+3. Choose **Install suggested plugins**.
+4. Create your first admin user by providing the following information: 
 
-18.	Install Jenkins plugins
+  * Username: `<username>`
+  * Password: `<password>`
+  * Confirm password: `<password>`
+  * Full name: `<full_name>`
+  * Email address: `<email_address>`
 
-In this step, we'll be installing the Amazon ECR plugin and the Cloudbees Docker build and publish plugin.  We use the ECR plugin to push Docker images to an ECR repository.  We use the Docker build and publish plugin here to build Docker images.    
+5. Choose **Save and finish**.
+6. Choose **Start Using Jenkins**.
+7. Install Jenkins plugins.
 
-a.	Login to Jenkins with your username and password
-b.	From the main dashboard, click Manage Jenkins
-c.	Click manage plugins
-d.	Click the available tab
-e.	Check the Cloudbees Docker build and publish plugin and the Amazon ECR plugin
-f.	Click the download now and install after restart button
-g.	Check the box labeled restart Jenkins when installation is complete and no jobs are running
+  In this step, you install the **Amazon ECR plugin** and the **Cloudbees Docker build and publish plugin**. You use the **Amazon ECR plugin** to push Docker images to an Amazon ECR repository. You use the **Cloudbees Docker build and publish plugin** to build Docker images.
+
+    1. Log in to Jenkins with your username and password.
+    2. On the main dashboard, click **Manage Jenkins**.
+    3. Choose the **Manage plugins** tab.
+    4. Choose the **Available** tab.
+    5. Select the **Cloudbees Docker build and publish plugin** and the **Amazon ECR plugin**.
+    6. Choose **Download now and install after restart**.
+    7. Choose **Restart Jenkins when installation is complete and no jobs are running**.
  
 Step 5: Create and import SSH keys for Github  
 In this step we will create an SSH key and import that key into Github so we can login into Github over SSH.
