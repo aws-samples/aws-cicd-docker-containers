@@ -185,9 +185,9 @@ In this step you create a repository to store your dockerfile and all its depend
     
   5. Stage your files:
     
-    `git add .`
-    
-    `git commit -m "First commit"`
+    ```
+    git add .
+    git commit -m "First commit"```
     
   6. Set your remote origin.
   
@@ -220,33 +220,36 @@ In this step you create a repository to store your dockerfile and all its depend
     **Note**: If your Jenkins password containers special characters, you will need to encode them using URL escape codes.  
     
     Make sure there is a trailing / at the end of the URL.  For example:
+    
     `http://username:password@FQDN/github-webhook/`
 
   7. Choose **Update service**.
 
 ##Step 7: Configure Jenkins  
-In this step we will Jenkins Freestyle project to automate the tasks in our pipeline.  
+In this step you will create a Jenkins Freestyle project to automate the tasks in your pipeline.  
 
-28.	Create a freestyle project in Jenkins
-a.	Login to Jenkins
-b.	Click New Item
-c.	Enter a name for the project (DO NOT USE SPACES)
-d.	Select freestyle project from the list of project types
-e.	Click OK
-
-
-
-f.	Under the source code management heading click the Git radio button
-g.	In the repository URL field type the name of your Git hub repo, https://github.com/<repo>.git
-h.	Click the drop down menu for the Credentials field and select the Github credentials you created in step 7.28.  
-i.	Under build triggers select Build when a change is pushed to Github.
-j.	Scroll down to the build section
-k.	Click the add a build step
-l.	Select execute shell from the drop down
-m.	In the command field type or paste the following text: 
-#!/bin/bash
-DOCKER_LOGIN=`aws ecr get-login --region us-west-2`
-${DOCKER_LOGIN}
+1. Create a freestyle project in Jenkins
+  1. Login to Jenkins
+  2. Choose **New Item**, and then type a name for the project.
+  
+    **Note**: Make sure the name does not include spaces.
+  
+  3. Choose **freestyle project** from the list of project types.
+  4. Choose **OK**.
+  5. Under the source code management heading, choose the **git** button.
+  6. In the repository URL field, type the name of your GitHub repository, 
+    `https://github.com/<repo>.git`
+  7. In **Credentials**, choose the GitHub credentials you create in step 1 of this procedure. 
+  8. Under build triggers, choose **Build when a change is pushed to Github**.
+  9. Scroll to the build section, and then choose **Add a build step**.
+  10. Choose execute shell.
+  11. In the command field, type or paste the following text:
+  
+    ```
+    #!/bin/bash
+    DOCKER_LOGIN=`aws ecr get-login --region us-west-2`
+    ${DOCKER_LOGIN}'```
+    
 n.	Click the add a build step button
 o.	Select Docker Build and Publish from the drop down
 p.	In the repository name field enter the name of your ECR repository
