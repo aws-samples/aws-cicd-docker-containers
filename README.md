@@ -309,6 +309,7 @@ fi
 
 You should see the following image in your browser:
  
+![alt text](https://github.com/awslabs/aws-cicd-docker-containers/master/images/DockerCloudHelloWorld.png "Whale logo")
 
  
  
