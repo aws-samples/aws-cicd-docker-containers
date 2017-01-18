@@ -61,14 +61,14 @@ To use this guide, you must have the following software components installed:
 
   **Note**: Do not proceed to the next step until the **Stack Status** shows **CREATE_COMPLETE**.  To get the status of the stack type `aws cloudformation describe-stacks --stack-name EcsClusterStack --query 'Stacks[*].[StackId, StackStatus]'` at a command prompt. 
 
-Step 2: Create Jenkins server
-Jenkins is a popular server for implementing continuous integration and continuous delivery pipelines.  In this example, we'll be using Jenkins to build a Docker image from a dockerfile, push that image to the ECR registry that we created earlier, create a task definition for our container, and finally, we'll deploy and/or update a service running on our ECS cluster.
+##Step 2: Create Jenkins server
+Jenkins is a popular server for implementing continuous integration and continuous delivery pipelines. In this example, you'll use Jenkins to build a Docker image from a Dockerfile, push that image to the Amazon ECR registry that you created earlier, and create a task definition for your container. Finally, you'll deploy and update a service running on your ECS cluster.
 
-6.	Change the current working directory to the root of the cloned repo and execute the following command:
+1. Change the current working directory to the root of the cloned repo and execute the following command:
 
-a.	aws cloudformation create-stack --template-body file://ecs-jenkins-demo.template --stack-name JenkinsStack --capabilities CAPABILITY_IAM --tags Key=Name,Value=Jenkins --region us-west-2 --parameters ParameterKey=EcsStackName,ParameterValue=EcsClusterStack
+`aws cloudformation create-stack --template-body file://ecs-jenkins-demo.template --stack-name JenkinsStack --capabilities CAPABILITY_IAM --tags Key=Name,Value=Jenkins --region us-west-2 --parameters ParameterKey=EcsStackName,ParameterValue=EcsClusterStack`
   
-Note: Do not proceed to the next step until the Stack Status shows CREATE_COMPLETE.  To get the status of the stack type aws cloudformation describe-stacks --stack-name JenkinsStack --query 'Stacks[*].[StackId, StackStatus]' at a command prompt. 
+**Note**: Do not proceed to the next step until the **Stack Status** shows **CREATE_COMPLETE**.  To get the status of the stack type `aws cloudformation describe-stacks --stack-name JenkinsStack --query 'Stacks[*].[StackId, StackStatus]'` at a command prompt. 
 
 Retrieve the public hostname of the Jenkins server
 
