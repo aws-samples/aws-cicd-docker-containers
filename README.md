@@ -91,17 +91,17 @@ Jenkins is a popular server for implementing continuous integration and continuo
   
     `logout`
 
-Step 3: Create ECR registry  
-ECR is a private Docker container registry that we'll use to store our container images.  For this example, we'll be creating a repository called hello-world in the us-west-2 (Oregon) region.
+##Step 3: Create ECR registry
+Amazon ECR is a private Docker container registry that you'll use to store your container images. For this example, we'll create a repository named hello-world in the us-west-2 (Oregon) region.
 
-11.	Create a ECR registry
+1. Create a ECR registry by running the following command: 
 
-a.	aws ecr create-repository --repository-name hello-world --region us-west-2
+  `aws ecr create-repository --repository-name hello-world --region us-west-2`
 
-12.	Record the value of the repositoryUri of this repo as we will need it later 
-13.	Verify you can login to the repository we created (optional) 
+2. Record the value of the URL of this repository because you will need it later. 
+3. Verify that you can log in to the repository you created (optional). 
 
-Since the Docker CLI doesn't support the standard AWS authentication methods, we need to authenticate the Docker client another way so ECR knows who is trying to push an image.  Using the aws cli, we will generate an authorization token that you pass into the Docker login command.
+  Because the Docker CLI doesn't support the standard AWS authentication methods, you need to authenticate the Docker client in another way so ECR knows who is trying to push an image.  Using the AWS CLI, you generate an authorization token that you pass into the Docker login command.
 
 a.	If you’re using OS X, type: $(aws ecr get-login)
 b.	If you’re running Windows, type: aws ecr get-login | cmd
