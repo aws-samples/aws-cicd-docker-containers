@@ -64,20 +64,18 @@ To use this guide, you must have the following software components installed:
 ##Step 2: Create Jenkins server
 Jenkins is a popular server for implementing continuous integration and continuous delivery pipelines. In this example, you'll use Jenkins to build a Docker image from a Dockerfile, push that image to the Amazon ECR registry that you created earlier, and create a task definition for your container. Finally, you'll deploy and update a service running on your ECS cluster.
 
-1. Change the current working directory to the root of the cloned repo and execute the following command:
+1. Change the current working directory to the root of the cloned repository, and then execute the following command:
 
   `aws cloudformation create-stack --template-body file://ecs-jenkins-demo.template --stack-name JenkinsStack --capabilities CAPABILITY_IAM --tags Key=Name,Value=Jenkins --region us-west-2 --parameters ParameterKey=EcsStackName,ParameterValue=EcsClusterStack`
   
   **Note**: Do not proceed to the next step until the **Stack Status** shows **CREATE_COMPLETE**.  To get the status of the stack type `aws cloudformation describe-stacks --stack-name JenkinsStack --query 'Stacks[*].[StackId, StackStatus]'` at a command prompt. 
 
-Retrieve the public hostname of the Jenkins server
+2. Retrieve the public hostname of the Jenkins server. Open a terminal window and type the following command:: 
 
-7.	Open a terminal window and type: 
+  `aws ec2 describe-instances --filters "Name=tag-value","Values=JenkinsStack" | jq .Reservations[].Instances[].PublicDnsName`
 
-a.	aws ec2 describe-instances --filters "Name=tag-value","Values=JenkinsStack" | jq .Reservations[].Instances[].PublicDnsName
-
-8.	Copy the public hostname
-9.	SSH into the instance and copy the temp password from /var/lib/jenkins/secrets/initialAdminPassword
+3. Copy the public hostname
+4. SSH into the instance, and then copy the temp password from `/var/lib/jenkins/secrets/initialAdminPassword`.
 
 a.	(OS X) ssh -i <full_path_to_key_file> ec2-user@<public_hostname>
 b.	(Windows) For the Windows instructions see http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html 
