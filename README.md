@@ -259,7 +259,7 @@ In this step you will create a Jenkins Freestyle project to automate the tasks i
   16. Click **Add a build step**.
   17. Choose **execute shell**.
   18. In the **command** field, type or paste for following text.  Be sure to replace the `<ECR_repo>` and `<cluster_name>` with the appropriate values from your environment: 
-```  
+    ```  
 #!/bin/bash
 #Constants
 REGION=us-west-2
@@ -290,7 +290,7 @@ else
   echo "entered new service"
   aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}
 fi
-```
+    ```
 
     NOTE: Before saving this project, make sure that the variable CLUSTER is set to the name you gave your cluster, the REPOSITORY_NAME is set to the name of your ECR registry, and the REGION is set to the region where you created your ECS cluster. 
 
