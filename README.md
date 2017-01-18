@@ -133,13 +133,13 @@ Amazon ECR is a private Docker container registry that you'll use to store your 
     5. Select the **Cloudbees Docker build and publish plugin** and the **Amazon ECR plugin**.
     6. Choose **Download now and install after restart**.
     7. Choose **Restart Jenkins when installation is complete and no jobs are running**.
- 
-Step 5: Create and import SSH keys for Github  
-In this step we will create an SSH key and import that key into Github so we can login into Github over SSH.
 
-19.	If you’re running OS X, open terminal window.  If you’re running Windows open a Git Bash shell. 
+##Step 5: Create and import SSH keys for Github  
+In this step, you create an SSH key and import it into GitHub so we can login into Github over SSH.
 
-a.	ssh-keygen -t rsa -b 4069 -C your_email@company.com
+1. If you’re running OS X, open terminal window.  If you’re running Windows open a Git Bash shell. Run the following command: 
+
+  `ssh-keygen -t rsa -b 4069 -C your_email@company.com`
 
 20.	Accept the file location and enter a passphrase
 
