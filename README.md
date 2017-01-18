@@ -251,15 +251,15 @@ In this step you will create a Jenkins Freestyle project to automate the tasks i
     DOCKER_LOGIN=`aws ecr get-login --region us-west-2`
     ${DOCKER_LOGIN}'
     ```
-    
-n.	Click the add a build step button
-o.	Select Docker Build and Publish from the drop down
-p.	In the repository name field enter the name of your ECR repository
-q.	In the tag field enter v_$BUILD_NUMBER
-r.	In the Docker registry URL field enter the URL of your Docker registry.  Only use the fully qualified domain name (FQDN) of the ECR repository you created in step 3.11.a, e.g. https://<account_number>.dkr.ecr.us-west-2.amazonaws.com 
-s.	Click the add a build step button
-t.	Select execute shell from the drop down
-u.	In the command field type or paste for following text.  Be sure to replace the red text with the appropriate values from your environment: 
+
+  12. Choose **Add a build step**, and then choose **Docker Build and Publish**.
+  13. In the **repository name** field enter the name of your ECR repository.
+  14. In the **tag** field, enter `v_$BUILD_NUMBER`.
+  15. In the **Docker registry URL**, type the URL of your Docker registry. Use only the fully qualified domain name (FQDN) of the ECR repository you created earlier in Step 3: Create an ECR Registry.
+  16. Click **Add a build step**.
+  17. Choose **execute shell**.
+  18. In the **command** field, type or paste for following text.  Be sure to replace the `<ECR_repo>` and `<cluster_name>` with the appropriate values from your environment: 
+```  
 #!/bin/bash
 #Constants
 REGION=us-west-2
@@ -290,21 +290,22 @@ else
   echo "entered new service"
   aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}
 fi
+```
 
-NOTE: Before saving this project, make sure that the variable CLUSTER is set to the name you gave your cluster, the REPOSITORY_NAME is set to the name of your ECR registry, and the REGION is set to the region where you created your ECS cluster. 
+    NOTE: Before saving this project, make sure that the variable CLUSTER is set to the name you gave your cluster, the REPOSITORY_NAME is set to the name of your ECR registry, and the REGION is set to the region where you created your ECS cluster. 
 
-v.	Click the save button. 
+  19. Click **save**. 
 
-29.	Make a change to a file in your repo, e.g. readme.md, and push it to Github (repeat steps 6.26.e-g or use the Github interface).  If you've configured things properly, Jenkins will pull the code from your Git repo into a workspace, build the contain image, push the container image to ECR, create a task and service definition, and start your service.
-30.	Confirm that your service is running.
+2. Make a change to a file in your repository, e.g. readme.md, and push it to GitHub (from step 6: Create a GitHub Repository, repeat step 2, or use the Github interface).  If you've configured things correctly, Jenkins pulls the code from your Git repository into a workspace, build the container image, pushes the container image to ECR, creates a task and service definition, and starts your service.
+3. Confirm that your service is running.
 
-a.	Login to the AWS console
-b.	Under the compute heading click on EC2 Container Service
-c.	Click on the name of the cluster we created earlier, e.g. getting-started
-d.	From the services tab, click on the name of the service we created, e.g. hello-world-service
-e.	From the task tab, click on the RUNNING task
-f.	Under the Containers heading, click on the twisty next to the container name
-g.	Under the network bindings heading click on the IP address in the External Link column
+  1. Log in to the [AWS Management Console](https://console.aws.amazon.com/console/home)
+  2. Under **compute**, choose **EC2 Container Service**.
+  3. Choose the name of the cluster your created earlier, for example, `getting-started`.
+  4. On the **services** tab, choose the name of the service your created, for example, `hello-world-service`.
+  5. On the **task** tab, choose the **RUNNING** task.
+  6. Under **Containers**, click on the twisty next to the container name.
+  7. Under the **network bindings**, choose the IP address in the External Link column.
 
 You should see the following image in your browser:
  
