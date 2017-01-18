@@ -187,7 +187,8 @@ In this step you create a repository to store your dockerfile and all its depend
     
     ```
     git add .
-    git commit -m "First commit"```
+    git commit -m "First commit"
+    ```
     
   6. Set your remote origin.
   
@@ -248,7 +249,8 @@ In this step you will create a Jenkins Freestyle project to automate the tasks i
     ```
     #!/bin/bash
     DOCKER_LOGIN=`aws ecr get-login --region us-west-2`
-    ${DOCKER_LOGIN}'```
+    ${DOCKER_LOGIN}'
+    ```
     
 n.	Click the add a build step button
 o.	Select Docker Build and Publish from the drop down
