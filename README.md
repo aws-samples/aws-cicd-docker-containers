@@ -184,61 +184,67 @@ pbcopy < ~/.ssh/id_rsa.pub
 In this step you create a repository to store your dockerfile and all its dependencies.  
 
 1. Create a repository
-  1. Login to [GitHub](https://github.com).
-  2. Choose **Start a project** or **new repository**.
-  3. Type a name for the repository.
-  4. Choose **Create repository**.
+    1. Login to [GitHub](https://github.com).
+    2. Choose **Start a project** or **new repository**.
+    3. Type a name for the repository.
+    4. Choose **Create repository**.
 2. Push code to your repository.
-  1. Open a terminal window (OS X) or a Git Bash shell (Windows).
-  2. Change the working directory to the root of the `hello-world` repository you cloned earlier
-  3. Delete the hidden .git directory
-  If you're running OSX, type `rm -fR .git`. Otherwise, type `del /S /F /Q .git`.
-  4. Reinitialize the repository and push the contents to your new GitHub repository using SSH by running the following command:
-  
-    `git init`
+    1. Open a terminal window (OS X) or a Git Bash shell (Windows).
+    2. Change the working directory to the root of the `hello-world` repository you cloned earlier
+    3. Delete the hidden .git directory
+    If you're running OSX, type `rm -fR .git`. Otherwise, type `del /S /F /Q .git`.
+    4. Reinitialize the repository and push the contents to your new GitHub repository using SSH by running the following command:
+    ```  
+    git init
+    ```
     
-  5. Stage your files:
+    5. Stage your files:
     
     ```
     git add .
     git commit -m "First commit"
     ```
     
-  6. Set your remote origin.
+    6. Set your remote origin.
   
-    If you are using SSH, run the following command: 
-  
-    `git remote add origin 'git@github.com:<your_repo>.git'`
+    If you are using SSH, run the following command:
+    ```
+    git remote add origin 'git@github.com:<your_repo>.git'
+    ```
     
-    If you are using HTTPS, run the following command: 
-  
-    `git remote add origin 'https://github.com/<your_repo>.git'`
+    If you are using HTTPS, run the following command:
+    ```
+    git remote add origin 'https://github.com/<your_repo>.git'
+    ```
     
     **Note**: If you created the SSH key for GitHub on your machine, you can use either method.  The HTTPS method requires that you to enter your GitHub username and password at the prompts. 
   
-  7. Push your code to GitHub by running the following command: 
-    `git push -u origin master`
-
+    7. Push your code to GitHub by running the following command: 
+    ```
+    git push -u origin master
+    ```
+    
     This project includes a file called taskdef.json.  You can view it in the GitHub interface or with a text editor on your local machine.  This file is the JSON representation of your ECS task definition.
 
     **Note**: You must supply values for the **family** and **name** keys. These are used used later in the Jenkins execution scripts.  You have to set the value of the **image** key to `%REPOSITORY_URI%:v_%BUILD_NUMBER%`. You will use this mechanism to add the Jenkins build number as a tag to the Docker image. 
 
 3. Enable webhooks on your repo so Jenkins is notified when files are pushed
 
-  1. Browse to your GitHub repository.
-  2. Choose **Settings**.
-  3. Choose **Integrations & Services**.
-  4. Choose **Add service**.
-  5. In the search field, type `Jenkins (github plugin)`
-  6. Enter the public `FQDN/github-webhook/` of your Jenkins server in the Jenkins URL field prepended by your Jenkins username & password.
+    1. Browse to your GitHub repository.
+    2. Choose **Settings**.
+    3. Choose **Integrations & Services**.
+    4. Choose **Add service**.
+    5. In the search field, type `Jenkins (github plugin)`
+    6. Enter the public `FQDN/github-webhook/` of your Jenkins server in the Jenkins URL field prepended by your Jenkins username & password.
 
     **Note**: If your Jenkins password containers special characters, you will need to encode them using URL escape codes.  
     
     Make sure there is a trailing / at the end of the URL.  For example:
-    
-    `http://username:password@FQDN/github-webhook/`
+    ```
+    http://username:password@FQDN/github-webhook/
+    ```
 
-  7. Choose **Update service**.
+    7. Choose **Update service**.
 
 ## Step 7: Configure Jenkins  
 In this step you will create a Jenkins Freestyle project to automate the tasks in your pipeline.  
