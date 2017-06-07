@@ -148,33 +148,37 @@ In this step, you install the **Amazon ECR plugin** and the **Cloudbees Docker b
 In this step, you create an SSH key and import it into GitHub so we can login into Github over SSH.
 
 1. If you’re running OS X, open terminal window.  If you’re running Windows open a Git Bash shell. Run the following command: 
-
-  `ssh-keygen -t rsa -b 4069 -C your_email@company.com`
+```
+ssh-keygen -t rsa -b 4069 -C your_email@company.com
+```
 
 2. Accept the file location and type a passphrase.
 3. Ensure `ssh-agent` is enabled by running the following command:
-
-  `eval "$(ssh-agent -s)"`
+```
+eval "$(ssh-agent -s)"
+```
 
 4. Add the SSH key to agent:
+```
+ssh-add ~/.ssh/id_rsa
+```
 
-  `ssh-add ~/.ssh/id_rsa`
-
-  **Note**: If you already have a key called id_rsa, choose another name. 
+**Note**: If you already have a key called id_rsa, choose another name. 
 
 5. Copy the contents of the `id_rsa.pub` file to the clipboard.  On OS X you can use the following command:
-
-  `pbcopy < ~/.ssh/id_rsa.pub`
+```
+pbcopy < ~/.ssh/id_rsa.pub
+```
 
 6. Login to Github.  If you don't have a Github account, follow the instructions posted here, https://help.github.com/articles/signing-up-for-a-new-github-account/. 
 
-  1. In the top right corner of any page, choose your profile picture, then choose settings.
-  2. In the user settings sidebar, choose **SSH and GPG keys**.
-  3. Choose **New SSH key** or **Add SSH key**.
-  4. Type a title for the key.
-  5. Paste your key in the key field.
-  6. Click **Add SSH key**.
-  7. If prompted, confirm your GitHub password.
+   1. In the top right corner of any page, choose your profile picture, then choose settings.
+   2. In the user settings sidebar, choose **SSH and GPG keys**.
+   3. Choose **New SSH key** or **Add SSH key**.
+   4. Type a title for the key.
+   5. Paste your key in the key field.
+   6. Click **Add SSH key**.
+   7. If prompted, confirm your GitHub password.
 
 ## Step 6: Create a Github Repository  
 In this step you create a repository to store your dockerfile and all its dependencies.  
