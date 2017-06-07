@@ -22,9 +22,9 @@ To use this guide, you must have the following software components installed:
 ## Step 1: Build an ECS Cluster
 1. Create an AWS access key and secret key by opening a terminal window, and then typing the following:
 
-  `aws iam create-access-key --username <user_name>`
+  aws iam create-access-key --username <user_name>
 
-  `<user_name>` is an IAM user with _AdminstratorAccess_.
+  `<user_name>` is an IAM user with _AdministratorAccess_.
 
 2. Copy and paste the output from the previous command to a text file
 
@@ -47,21 +47,24 @@ To use this guide, you must have the following software components installed:
 
   5. (OS X only) Change the working directory to your download directory and change permission so only the current logged in user can read it. `<file_name>` is the name of the .pem file you downloaded earlier:
   
-    `chmod <file_name> 400`
+    chmod <file_name> 400
 
 5.	Clone the git repository that contains the CloudFormation templates to create the infrastructure we’ll use to build our pipeline. 
 
   1. Open a command prompt and clone the Github repository that has the template.
 
-    `git clone https://github.com/jicowan/hello-world`
+    git clone https://github.com/jicowan/hello-world
 
   2. Change the working directory to the directory that was created when you cloned the repository. At the command prompt, type or paste the following.  `<key_name> is the name of an SSH key in the region where you're creating the ECS cluster:
 
-    `aws cloudformation create-stack --template-body file://ecs-cluster.template --stack-name EcsClusterStack --capabilities CAPABILITY_IAM --tags Key=Name,Value=ECS --region us-west-2 --parameters ParameterKey=KeyName,ParameterValue=<key_name> ParameterKey=EcsCluster,ParameterValue=getting-started ParameterKey=AsgMaxSize,ParameterValue=2`
+    aws cloudformation create-stack --template-body file://ecs-cluster.template --stack-name EcsClusterStack --capabilities CAPABILITY_IAM --tags Key=Name,Value=ECS --region us-west-2 --parameters ParameterKey=KeyName,ParameterValue=<key_name> ParameterKey=EcsCluster,ParameterValue=getting-started ParameterKey=AsgMaxSize,ParameterValue=2
 
-  **Note**: Do not proceed to the next step until the **Stack Status** shows **CREATE_COMPLETE**.  To get the status of the stack type `aws cloudformation describe-stacks --stack-name EcsClusterStack --query 'Stacks[*].[StackId, StackStatus]'` at a command prompt. 
+  **Note**: Do not proceed to the next step until the **Stack Status** shows **CREATE_COMPLETE**.  To get the status of the stack at a command prompt, type
+  
+    aws cloudformation describe-stacks --stack-name EcsClusterStack --query 'Stacks[*].[StackId, StackStatus]'
+    
 
-##Step 2: Create a Jenkins Server
+## Step 2: Create a Jenkins Server
 Jenkins is a popular server for implementing continuous integration and continuous delivery pipelines. In this example, you'll use Jenkins to build a Docker image from a Dockerfile, push that image to the Amazon ECR registry that you created earlier, and create a task definition for your container. Finally, you'll deploy and update a service running on your ECS cluster.
 
 1. Change the current working directory to the root of the cloned repository, and then execute the following command:
@@ -72,7 +75,7 @@ Jenkins is a popular server for implementing continuous integration and continuo
 
 2. Retrieve the public hostname of the Jenkins server. Open a terminal window and type the following command:: 
 
-  `aws ec2 describe-instances --filters "Name=tag-value","Values=JenkinsStack" | jq .Reservations[].Instances[].PublicDnsName`
+  aws ec2 describe-instances --filters "Name=tag-value","Values=JenkinsStack" | jq .Reservations[].Instances[].PublicDnsName
 
 3. Copy the public hostname
 4. SSH into the instance, and then copy the temp password from `/var/lib/jenkins/secrets/initialAdminPassword`.
@@ -91,7 +94,7 @@ Jenkins is a popular server for implementing continuous integration and continuo
   
     `logout`
 
-##Step 3: Create an ECR Registry
+## Step 3: Create an ECR Registry
 Amazon ECR is a private Docker container registry that you'll use to store your container images. For this example, we'll create a repository named hello-world in the us-west-2 (Oregon) region.
 
 1. Create a ECR registry by running the following command: 
@@ -108,7 +111,7 @@ Amazon ECR is a private Docker container registry that you'll use to store your 
 
   **Note**: This command will not succeed unless you have the Docker client tools installed on your machine and the Docker Virtual Machine is running.  The output should say Login Succeeded.
 
-##Step 4: Configure Jenkins First Run
+## Step 4: Configure Jenkins First Run
 1. Paste the public hostname of the Jenkins server from step 2.3 into a browser.
 2. Paste the password you copied from the `/var/lib/jenkins/secrets` directory from Step 2: Create a Jenkins Server (step 2.4) in the password field, and then choose **Next**.
 3. Choose **Install suggested plugins**.
@@ -126,15 +129,15 @@ Amazon ECR is a private Docker container registry that you'll use to store your 
 
   In this step, you install the **Amazon ECR plugin** and the **Cloudbees Docker build and publish plugin**. You use the **Amazon ECR plugin** to push Docker images to an Amazon ECR repository. You use the **Cloudbees Docker build and publish plugin** to build Docker images.
 
-    1. Log in to Jenkins with your username and password.
-    2. On the main dashboard, click **Manage Jenkins**.
-    3. Choose the **Manage plugins** tab.
-    4. Choose the **Available** tab.
-    5. Select the **Cloudbees Docker build and publish plugin** and the **Amazon ECR plugin**.
-    6. Choose **Download now and install after restart**.
-    7. Choose **Restart Jenkins when installation is complete and no jobs are running**.
+1. Log in to Jenkins with your username and password.
+2. On the main dashboard, click **Manage Jenkins**.
+3. Choose the **Manage plugins** tab.
+4. Choose the **Available** tab.
+5. Select the **Cloudbees Docker build and publish plugin** and the **Amazon ECR plugin**.
+6. Choose **Download now and install after restart**.
+7. Choose **Restart Jenkins when installation is complete and no jobs are running**.
 
-##Step 5: Create and import SSH keys for Github  
+## Step 5: Create and import SSH keys for Github  
 In this step, you create an SSH key and import it into GitHub so we can login into Github over SSH.
 
 1. If you’re running OS X, open terminal window.  If you’re running Windows open a Git Bash shell. Run the following command: 
@@ -166,7 +169,7 @@ In this step, you create an SSH key and import it into GitHub so we can login in
   6. Click **Add SSH key**.
   7. If prompted, confirm your GitHub password.
 
-##Step 6: Create a Github Repository  
+## Step 6: Create a Github Repository  
 In this step you create a repository to store your dockerfile and all its dependencies.  
 
 1. Create a repository
@@ -226,7 +229,7 @@ In this step you create a repository to store your dockerfile and all its depend
 
   7. Choose **Update service**.
 
-##Step 7: Configure Jenkins  
+## Step 7: Configure Jenkins  
 In this step you will create a Jenkins Freestyle project to automate the tasks in your pipeline.  
 
 1. Create a freestyle project in Jenkins
@@ -259,7 +262,8 @@ In this step you will create a Jenkins Freestyle project to automate the tasks i
   16. Click **Add a build step**.
   17. Choose **execute shell**.
   18. In the **command** field, type or paste for following text.  Be sure to replace the `<ECR_repo>` and `<cluster_name>` with the appropriate values from your environment: 
-    ```  
+
+```bash
 #!/bin/bash
 #Constants
 REGION=us-west-2
@@ -290,9 +294,9 @@ else
   echo "entered new service"
   aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}
 fi
-    ```
+```
 
-      **Note**: Before saving this project, make sure that the variable CLUSTER is set to the name you gave your cluster, the REPOSITORY_NAME is set to the name of your ECR registry, and the REGION is set to the region where you created your ECS cluster. 
+**Note**: Before saving this project, make sure that the variable CLUSTER is set to the name you gave your cluster, the REPOSITORY_NAME is set to the name of your ECR registry, and the REGION is set to the region where you created your ECS cluster. 
 
   19. Click **save**. 
 
