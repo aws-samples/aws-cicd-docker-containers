@@ -22,7 +22,9 @@ To use this guide, you must have the following software components installed:
 ## Step 1: Build an ECS Cluster
 1. Create an AWS access key and secret key by opening a terminal window, and then typing the following:
 
-  aws iam create-access-key --username <user_name>
+```
+aws iam create-access-key --username <user_name>
+```
 
   `<user_name>` is an IAM user with _AdministratorAccess_.
 
@@ -32,74 +34,78 @@ To use this guide, you must have the following software components installed:
 
 3. Create an AWS profile on your local machine.  From a command prompt, type: 
 
-  `aws configure`   
+```
+aws configure
+```   
 
   At the prompts, paste your aws access key ID, aws secret key ID, the preferred region (us-west-2), and **json** as the output format. 
 
-4. Create an SSH key in the us-west-2 region.  We will use this SSH key to login to the Jenkins server to retrieve the administrator password.  
-
-  1. Open the [EC2 console](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#)
-  2. Under the **Networking & Security**, choose **Key Pairs**
-  3. Choose **Create Key Pair**
-  4. Assign a name to the key pair by typing a name in the Key pair name field, then click the Create button
-
+4. Create an SSH key in the us-west-2 region.  We will use this SSH key to login to the Jenkins server to retrieve the administrator password.
+      1. Open the [EC2 console](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#)
+      2. Under the **Networking & Security**, choose **Key Pairs**
+      3. Choose **Create Key Pair**
+      4. Assign a name to the key pair by typing a name in the **Key pair** name field, then click the **Create** button
+   
     A file will be downloaded to your default download directory
 
-  5. (OS X only) Change the working directory to your download directory and change permission so only the current logged in user can read it. `<file_name>` is the name of the .pem file you downloaded earlier:
-  
-    chmod <file_name> 400
+5. (OS X only) Change the working directory to your download directory and change permission so only the current logged in user can read it. `<file_name>` is the name of the .pem file you downloaded earlier:
+```
+chmod <file_name> 400
+```
 
-5.	Clone the git repository that contains the CloudFormation templates to create the infrastructure we’ll use to build our pipeline. 
-
-  1. Open a command prompt and clone the Github repository that has the template.
-
-    git clone https://github.com/jicowan/hello-world
-
-  2. Change the working directory to the directory that was created when you cloned the repository. At the command prompt, type or paste the following.  `<key_name> is the name of an SSH key in the region where you're creating the ECS cluster:
-
-    aws cloudformation create-stack --template-body file://ecs-cluster.template --stack-name EcsClusterStack --capabilities CAPABILITY_IAM --tags Key=Name,Value=ECS --region us-west-2 --parameters ParameterKey=KeyName,ParameterValue=<key_name> ParameterKey=EcsCluster,ParameterValue=getting-started ParameterKey=AsgMaxSize,ParameterValue=2
-
-  **Note**: Do not proceed to the next step until the **Stack Status** shows **CREATE_COMPLETE**.  To get the status of the stack at a command prompt, type
-  
-    aws cloudformation describe-stacks --stack-name EcsClusterStack --query 'Stacks[*].[StackId, StackStatus]'
-    
+6. Clone the git repository that contains the CloudFormation templates to create the infrastructure we’ll use to build our pipeline. 
+      1. Open a command prompt and clone the Github repository that has the template.
+      ```
+      git clone https://github.com/jicowan/hello-world
+      ```
+      
+      2. Change the working directory to the directory that was created when you cloned the repository. At the command prompt, type or paste the following. Where `<key_name>` is the name of an SSH key in the region where you're creating the ECS cluster:
+      ```
+      aws cloudformation create-stack --template-body file://ecs-cluster.template --stack-name EcsClusterStack --capabilities CAPABILITY_IAM --tags Key=Name,Value=ECS --region us-west-2 --parameters ParameterKey=KeyName,ParameterValue=<key_name> ParameterKey=EcsCluster,ParameterValue=getting-started ParameterKey=AsgMaxSize,ParameterValue=2
+      ```
+  **Note**: Do not proceed to the next step until the **Stack Status** shows **CREATE_COMPLETE**.  To get the status of the stack at a command prompt, type `aws cloudformation describe-stacks --stack-name EcsClusterStack --query 'Stacks[*].[StackId, StackStatus]'`   
 
 ## Step 2: Create a Jenkins Server
 Jenkins is a popular server for implementing continuous integration and continuous delivery pipelines. In this example, you'll use Jenkins to build a Docker image from a Dockerfile, push that image to the Amazon ECR registry that you created earlier, and create a task definition for your container. Finally, you'll deploy and update a service running on your ECS cluster.
 
 1. Change the current working directory to the root of the cloned repository, and then execute the following command:
 
-  `aws cloudformation create-stack --template-body file://ecs-jenkins-demo.template --stack-name JenkinsStack --capabilities CAPABILITY_IAM --tags Key=Name,Value=Jenkins --region us-west-2 --parameters ParameterKey=EcsStackName,ParameterValue=EcsClusterStack`
-  
-  **Note**: Do not proceed to the next step until the **Stack Status** shows **CREATE_COMPLETE**.  To get the status of the stack type `aws cloudformation describe-stacks --stack-name JenkinsStack --query 'Stacks[*].[StackId, StackStatus]'` at a command prompt. 
+```
+aws cloudformation create-stack --template-body file://ecs-jenkins-demo.template --stack-name JenkinsStack --capabilities CAPABILITY_IAM --tags Key=Name,Value=Jenkins --region us-west-2 --parameters ParameterKey=EcsStackName,ParameterValue=EcsClusterStack`
+```  
 
-2. Retrieve the public hostname of the Jenkins server. Open a terminal window and type the following command:: 
+**Note**: Do not proceed to the next step until the **Stack Status** shows **CREATE_COMPLETE**.  To get the status of the stack type `aws cloudformation describe-stacks --stack-name JenkinsStack --query 'Stacks[*].[StackId, StackStatus]'` at a command prompt. 
 
-  aws ec2 describe-instances --filters "Name=tag-value","Values=JenkinsStack" | jq .Reservations[].Instances[].PublicDnsName
+2. Retrieve the public hostname of the Jenkins server. Open a terminal window and type the following command: 
+```
+aws ec2 describe-instances --filters "Name=tag-value","Values=JenkinsStack" | jq .Reservations[].Instances[].PublicDnsName
+```
 
 3. Copy the public hostname
 4. SSH into the instance, and then copy the temp password from `/var/lib/jenkins/secrets/initialAdminPassword`.
 
-  1. On OS X, use the following command:
-  
-    `ssh -i <full_path_to_key_file> ec2-user@<public_hostname>`
-    
-    For Windows instructions, see [Connecting to your Linux Instance from Windows Using PuTTY.](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html)
-    
-  2. Run the following command:
-  
-    `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
-    
-  3. Copy the output and logout of the instance by typing the following command:
-  
-    `logout`
+    1. On OS X, use the following command:
+```  
+ssh -i <full_path_to_key_file> ec2-user@<public_hostname>
+```
+    For Windows instructions, see [Connecting to your Linux Instance from Windows Using PuTTY](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html)
 
+    2. Run the following command:
+```  
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
+```
+
+    3. Copy the output and logout of the instance by typing the following command:
+```  
+logout
+```
 ## Step 3: Create an ECR Registry
 Amazon ECR is a private Docker container registry that you'll use to store your container images. For this example, we'll create a repository named hello-world in the us-west-2 (Oregon) region.
 
 1. Create a ECR registry by running the following command: 
-
-  `aws ecr create-repository --repository-name hello-world --region us-west-2`
+```
+aws ecr create-repository --repository-name hello-world --region us-west-2`
+```
 
 2. Record the value of the URL of this repository because you will need it later. 
 3. Verify that you can log in to the repository you created (optional). 
