@@ -250,88 +250,83 @@ In this step you create a repository to store your dockerfile and all its depend
 In this step you will create a Jenkins Freestyle project to automate the tasks in your pipeline.  
 
 1. Create a freestyle project in Jenkins
-  1. Login to Jenkins
-  2. Choose **New Item**, and then type a name for the project.
-  
+    1. Login to Jenkins
+    2. Choose **New Item**, and then type a name for the project.
+    
     **Note**: Make sure the name does not include spaces.
   
-  3. Choose **freestyle project** from the list of project types.
-  4. Choose **OK**.
-  5. Under the source code management heading, choose the **git** button.
-  6. In the repository URL field, type the name of your GitHub repository, 
+    3. Choose **freestyle project** from the list of project types.
+    4. Choose **OK**.
+    5. Under the source code management heading, choose the **git** button.
+    6. In the repository URL field, type the name of your GitHub repository, 
     `https://github.com/<repo>.git`
-  7. In **Credentials**, choose the GitHub credentials you create in step 1 of this procedure. 
-  8. Under build triggers, choose **Build when a change is pushed to Github**.
-  9. Scroll to the build section, and then choose **Add a build step**.
-  10. Choose execute shell.
-  11. In the command field, type or paste the following text:
-  
+    7. In **Credentials**, choose the GitHub credentials you create in step 1 of this procedure. 
+    8. Under build triggers, choose **Build when a change is pushed to Github**.
+    9. Scroll to the build section, and then choose **Add a build step**.
+    10. Choose execute shell.
+    11. In the command field, type or paste the following text:
     ```
     #!/bin/bash
     DOCKER_LOGIN=`aws ecr get-login --region us-west-2`
     ${DOCKER_LOGIN}'
     ```
 
-  12. Choose **Add a build step**, and then choose **Docker Build and Publish**.
-  13. In the **repository name** field enter the name of your ECR repository.
-  14. In the **tag** field, enter `v_$BUILD_NUMBER`.
-  15. In the **Docker registry URL**, type the URL of your Docker registry. Use only the fully qualified domain name (FQDN) of the ECR repository you created earlier in Step 3: Create an ECR Registry.
-  16. Click **Add a build step**.
-  17. Choose **execute shell**.
-  18. In the **command** field, type or paste for following text.  Be sure to replace the `<ECR_repo>` and `<cluster_name>` with the appropriate values from your environment: 
+    12. Choose **Add a build step**, and then choose **Docker Build and Publish**.
+    13. In the **repository name** field enter the name of your ECR repository.
+    14. In the **tag** field, enter `v_$BUILD_NUMBER`.
+    15. In the **Docker registry URL**, type the URL of your Docker registry. Use only the fully qualified domain name (FQDN) of the ECR repository you created earlier in Step 3: Create an ECR Registry.
+    16. Click **Add a build step**.
+    17. Choose **execute shell**.
+    18. In the **command** field, type or paste for following text.  Be sure to replace the `<ECR_repo>` and `<cluster_name>` with the appropriate values from your environment: 
 
-```bash
-#!/bin/bash
-#Constants
-REGION=us-west-2
-REPOSITORY_NAME=<ECR_repo>
-CLUSTER=<cluster_name>
-FAMILY=`sed -n 's/.*"family": "\(.*\)",/\1/p' taskdef.json`
-NAME=`sed -n 's/.*"name": "\(.*\)",/\1/p' taskdef.json`
-SERVICE_NAME=${NAME}-service
-#Store the repositoryUri as a variable
-REPOSITORY_URI=`aws ecr describe-repositories --repository-names ${REPOSITORY_NAME} --region ${REGION} | jq .repositories[].repositoryUri | tr -d '"'`
-#Replace the build number and respository URI placeholders with the constants above
-sed -e "s;%BUILD_NUMBER%;${BUILD_NUMBER};g" -e "s;%REPOSITORY_URI%;${REPOSITORY_URI};g" taskdef.json > ${NAME}-v_${BUILD_NUMBER}.json
-#Register the task definition in the repository
-aws ecs register-task-definition --family ${FAMILY} --cli-input-json file://${WORKSPACE}/${NAME}-v_${BUILD_NUMBER}.json --region ${REGION}
-SERVICES=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUSTER} --region ${REGION} | jq .failures[]`
-#Get latest revision
-REVISION=`aws ecs describe-task-definition --task-definition ${NAME} --region ${REGION} | jq .taskDefinition.revision`
+      ```bash
+      #!/bin/bash
+      #Constants
+      REGION=us-west-2
+      REPOSITORY_NAME=<ECR_repo>
+      CLUSTER=<cluster_name>
+      FAMILY=`sed -n 's/.*"family": "\(.*\)",/\1/p' taskdef.json`
+      NAME=`sed -n 's/.*"name": "\(.*\)",/\1/p' taskdef.json`
+      SERVICE_NAME=${NAME}-service
+      #Store the repositoryUri as a variable
+      REPOSITORY_URI=`aws ecr describe-repositories --repository-names ${REPOSITORY_NAME} --region ${REGION} | jq .repositories[].repositoryUri | tr -d '"'`
+      #Replace the build number and respository URI placeholders with the constants above
+      sed -e "s;%BUILD_NUMBER%;${BUILD_NUMBER};g" -e "s;%REPOSITORY_URI%;${REPOSITORY_URI};g" taskdef.json > ${NAME}-v_${BUILD_NUMBER}.json
+      #Register the task definition in the repository
+      aws ecs register-task-definition --family ${FAMILY} --cli-input-json file://${WORKSPACE}/${NAME}-v_${BUILD_NUMBER}.json --region ${REGION}
+      SERVICES=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUSTER} --region ${REGION} | jq .failures[]`
+      #Get latest revision
+      REVISION=`aws ecs describe-task-definition --task-definition ${NAME} --region ${REGION} | jq .taskDefinition.revision`
 
-#Create or update service
-if [ "$SERVICES" == "" ]; then
-  echo "entered existing service"
-  DESIRED_COUNT=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUSTER} --region ${REGION} | jq .services[].desiredCount`
-  if [ ${DESIRED_COUNT} = "0" ]; then
-    DESIRED_COUNT="1"
-  fi
-  aws ecs update-service --cluster ${CLUSTER} --region ${REGION} --service ${SERVICE_NAME} --task-definition ${FAMILY}:${REVISION} --desired-count ${DESIRED_COUNT}
-else
-  echo "entered new service"
-  aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}
-fi
-```
+      #Create or update service
+      if [ "$SERVICES" == "" ]; then
+        echo "entered existing service"
+        DESIRED_COUNT=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUSTER} --region ${REGION} | jq .services[].desiredCount`
+        if [ ${DESIRED_COUNT} = "0" ]; then
+          DESIRED_COUNT="1"
+        fi
+        aws ecs update-service --cluster ${CLUSTER} --region ${REGION} --service ${SERVICE_NAME} --task-definition ${FAMILY}:${REVISION} --desired-count ${DESIRED_COUNT}
+      else
+        echo "entered new service"
+        aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}
+      fi
+      ```
 
-**Note**: Before saving this project, make sure that the variable CLUSTER is set to the name you gave your cluster, the REPOSITORY_NAME is set to the name of your ECR registry, and the REGION is set to the region where you created your ECS cluster. 
+    **Note**: Before saving this project, make sure that the variable CLUSTER is set to the name you gave your cluster, the REPOSITORY_NAME is set to the name of your ECR registry, and the REGION is set to the region where you created your ECS cluster. 
 
-  19. Click **save**. 
+    19. Click **save**. 
 
 2. Make a change to a file in your repository, e.g. readme.md, and push it to GitHub (from step 6: Create a GitHub Repository, repeat step 2, or use the Github interface).  If you've configured things correctly, Jenkins pulls the code from your Git repository into a workspace, build the container image, pushes the container image to ECR, creates a task and service definition, and starts your service.
 3. Confirm that your service is running.
 
-  1. Log in to the [AWS Management Console](https://console.aws.amazon.com/console/home)
-  2. Under **compute**, choose **EC2 Container Service**.
-  3. Choose the name of the cluster your created earlier, for example, `getting-started`.
-  4. On the **services** tab, choose the name of the service your created, for example, `hello-world-service`.
-  5. On the **task** tab, choose the **RUNNING** task.
-  6. Under **Containers**, click on the twisty next to the container name.
-  7. Under the **network bindings**, choose the IP address in the External Link column.
-
-You should see the following image in your browser:
+    1. Log in to the [AWS Management Console](https://console.aws.amazon.com/console/home)
+    2. Under **compute**, choose **EC2 Container Service**.
+    3. Choose the name of the cluster your created earlier, for example, `getting-started`.
+    4. On the **services** tab, choose the name of the service your created, for example, `hello-world-service`.
+    5. On the **task** tab, choose the **RUNNING** task.
+    6. Under **Containers**, click on the twisty next to the container name.
+    7. Under the **network bindings**, choose the IP address in the External Link column.
+    
+    You should see the following image in your browser:
  
 ![alt text](https://github.com/awslabs/aws-cicd-docker-containers/blob/master/images/DockerCloudHelloWorld.png "Whale logo")
-
- 
- 
-
