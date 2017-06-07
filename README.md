@@ -85,20 +85,21 @@ aws ec2 describe-instances --filters "Name=tag-value","Values=JenkinsStack" | jq
 4. SSH into the instance, and then copy the temp password from `/var/lib/jenkins/secrets/initialAdminPassword`.
 
     1. On OS X, use the following command:
-```  
-ssh -i <full_path_to_key_file> ec2-user@<public_hostname>
-```
+    ```
+    ssh -i <full_path_to_key_file> ec2-user@<public_hostname>
+    ```
     For Windows instructions, see [Connecting to your Linux Instance from Windows Using PuTTY](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html)
 
     2. Run the following command:
-```  
-sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
-```
+    ```
+    sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+    ```
 
     3. Copy the output and logout of the instance by typing the following command:
-```  
-logout
-```
+    ```
+    logout
+    ```
+    
 ## Step 3: Create an ECR Registry
 Amazon ECR is a private Docker container registry that you'll use to store your container images. For this example, we'll create a repository named hello-world in the us-west-2 (Oregon) region.
 
