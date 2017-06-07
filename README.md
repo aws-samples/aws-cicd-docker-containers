@@ -105,18 +105,18 @@ Amazon ECR is a private Docker container registry that you'll use to store your 
 
 1. Create a ECR registry by running the following command: 
 ```
-aws ecr create-repository --repository-name hello-world --region us-west-2`
+aws ecr create-repository --repository-name hello-world --region us-west-2
 ```
 
 2. Record the value of the URL of this repository because you will need it later. 
 3. Verify that you can log in to the repository you created (optional). 
 
-  Because the Docker CLI doesn't support the standard AWS authentication methods, you need to authenticate the Docker client in another way so ECR knows who is trying to push an image.  Using the AWS CLI, you generate an authorization token that you pass into the Docker login command.
+Because the Docker CLI doesn't support the standard AWS authentication methods, you need to authenticate the Docker client in another way so ECR knows who is trying to push an image.  Using the AWS CLI, you generate an authorization token that you pass into the Docker login command.
 
   * If you’re using OS X, type: `$(aws ecr get-login)`
   * If you’re running Windows, type: `aws ecr get-login | cmd`
 
-  **Note**: This command will not succeed unless you have the Docker client tools installed on your machine and the Docker Virtual Machine is running.  The output should say Login Succeeded.
+**Note**: This command will not succeed unless you have the Docker client tools installed on your machine and the Docker Virtual Machine is running.  The output should say Login Succeeded.
 
 ## Step 4: Configure Jenkins First Run
 1. Paste the public hostname of the Jenkins server from step 2.3 into a browser.
@@ -124,17 +124,17 @@ aws ecr create-repository --repository-name hello-world --region us-west-2`
 3. Choose **Install suggested plugins**.
 4. Create your first admin user by providing the following information: 
 
-  * Username: `<username>`
-  * Password: `<password>`
-  * Confirm password: `<password>`
-  * Full name: `<full_name>`
-  * Email address: `<email_address>`
+    * Username: `<username>`
+    * Password: `<password>`
+    * Confirm password: `<password>`
+    * Full name: `<full_name>`
+    * Email address: `<email_address>`
 
 5. Choose **Save and finish**.
 6. Choose **Start Using Jenkins**.
 7. Install Jenkins plugins.
 
-  In this step, you install the **Amazon ECR plugin** and the **Cloudbees Docker build and publish plugin**. You use the **Amazon ECR plugin** to push Docker images to an Amazon ECR repository. You use the **Cloudbees Docker build and publish plugin** to build Docker images.
+In this step, you install the **Amazon ECR plugin** and the **Cloudbees Docker build and publish plugin**. You use the **Amazon ECR plugin** to push Docker images to an Amazon ECR repository. You use the **Cloudbees Docker build and publish plugin** to build Docker images.
 
 1. Log in to Jenkins with your username and password.
 2. On the main dashboard, click **Manage Jenkins**.
