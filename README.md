@@ -268,7 +268,7 @@ In this step you will create a Jenkins Freestyle project to automate the tasks i
     ```
     #!/bin/bash
     DOCKER_LOGIN=`aws ecr get-login --region us-west-2`
-    ${DOCKER_LOGIN}'
+    ${DOCKER_LOGIN}
     ```
 
     12. Choose **Add a build step**, and then choose **Docker Build and Publish**.
