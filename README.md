@@ -260,7 +260,7 @@ In this step you will create a Jenkins Freestyle project to automate the tasks i
     5. Under the source code management heading, choose the **git** button.
     6. In the repository URL field, type the name of your GitHub repository, 
     `https://github.com/<repo>.git`
-    7. In **Credentials**, choose the GitHub credentials you create in step 1 of this procedure. 
+    7. In **Credentials**, choose the GitHub credentials you create in step 5 of this procedure. 
     8. Under build triggers, choose **Build when a change is pushed to Github**.
     9. Scroll to the build section, and then choose **Add a build step**.
     10. Choose execute shell.
