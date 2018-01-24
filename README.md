@@ -113,8 +113,8 @@ aws ecr create-repository --repository-name hello-world --region us-west-2
 
 Because the Docker CLI doesn't support the standard AWS authentication methods, you need to authenticate the Docker client in another way so ECR knows who is trying to push an image.  Using the AWS CLI, you generate an authorization token that you pass into the Docker login command.
 
-  * If you’re using OS X, type: `$(aws ecr get-login)`
-  * If you’re running Windows, type: `aws ecr get-login | cmd`
+  * If you’re using OS X, type: `$(aws ecr get-login --no-include-email --region us-west-2)`
+  * If you’re running Windows, type: `aws ecr get-login --no-include-email --region us-west-2 | cmd`
 
 **Note**: This command will not succeed unless you have the Docker client tools installed on your machine and the Docker Virtual Machine is running.  The output should say Login Succeeded.
 
