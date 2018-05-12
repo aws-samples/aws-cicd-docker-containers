@@ -23,7 +23,7 @@ To use this guide, you must have the following software components installed:
 1. Create an AWS access key and secret key by opening a terminal window, and then typing the following:
 
 ```
-aws iam create-access-key --username <user_name>
+aws iam create-access-key --user-name <user_name>
 ```
 
   `<user_name>` is an IAM user with _AdministratorAccess_.
